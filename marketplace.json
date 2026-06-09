@@ -1,0 +1,194 @@
+{
+    "drivers": [
+        {
+            "driver_id": "knx-gateway-v1",
+            "name": "KNX Gateway",
+            "manufacturer": "KNX",
+            "type": "gateway",
+            "description": "Controls KNX-based lighting and loads via a KNX IP gateway",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "port",
+                    "label": "Port",
+                    "required": false,
+                    "default": 3671
+                }
+            ],
+            "load_types": [
+                {
+                    "type": "light",
+                    "label": "Light",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "group_address",
+                            "label": "Group Address",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "cover",
+                    "label": "Cover (Blind)",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "group_address",
+                            "label": "Group Address",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "thermostat",
+                    "label": "Thermostat",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "group_address",
+                            "label": "Group Address",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "driver_id": "coolmaster-v1",
+            "name": "CoolMaster Thermostat",
+            "manufacturer": "CoolAutomation",
+            "type": "gateway",
+            "description": "Bridges HVAC indoor units to IP control via the CoolMaster gateway",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "port",
+                    "label": "Port",
+                    "required": false,
+                    "default": 10102
+                }
+            ],
+            "load_types": [
+                {
+                    "type": "ac",
+                    "label": "AC Zone",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "unit_id",
+                            "label": "Unit ID",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "driver_id": "sony-bravia-v1",
+            "name": "Sony Bravia TV",
+            "manufacturer": "Sony",
+            "type": "direct",
+            "description": "Controls Sony Bravia TVs over IP using the REST API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "driver_id": "samsung-tv-v1",
+            "name": "Samsung Smart TV",
+            "manufacturer": "Samsung",
+            "type": "direct",
+            "description": "Controls Samsung Smart TVs over IP using the Tizen SmartThings API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "driver_id": "lg-tv-v1",
+            "name": "LG Smart TV",
+            "manufacturer": "LG",
+            "type": "direct",
+            "description": "Controls LG WebOS Smart TVs over IP using the LG Connect API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "driver_id": "benq-projector-v1",
+            "name": "BenQ Projector",
+            "manufacturer": "BenQ",
+            "type": "direct",
+            "description": "Controls BenQ projectors over IP or RS232-to-IP converter",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "port",
+                    "label": "Port",
+                    "required": false,
+                    "default": 8000
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        }
+    ]
+}
