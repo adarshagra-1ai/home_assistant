@@ -189,6 +189,165 @@
                     "required": true
                 }
             ]
+        },
+        {
+            "driver_id": "sony-oled-v1",
+            "name": "Sony OLED TV",
+            "manufacturer": "Sony",
+            "type": "direct",
+            "description": "Controls Sony OLED (A-series) TVs over IP using the REST API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "driver_id": "philips-hue-v1",
+            "name": "Philips Hue Bridge",
+            "manufacturer": "Philips",
+            "type": "gateway",
+            "description": "Controls Philips Hue smart lights via the Hue Bridge local API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "Bridge IP Address",
+                    "required": true
+                }
+            ],
+            "load_types": [
+                {
+                    "type": "light",
+                    "label": "Hue Light",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "light_id",
+                            "label": "Light ID",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "light_group",
+                    "label": "Hue Group",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "group_id",
+                            "label": "Group ID",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "driver_id": "lutron-caseta-v1",
+            "name": "Lutron Caseta Smart Bridge",
+            "manufacturer": "Lutron",
+            "type": "gateway",
+            "description": "Controls Lutron Caseta dimmers and switches via the Smart Bridge Pro local API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "Bridge IP Address",
+                    "required": true
+                }
+            ],
+            "load_types": [
+                {
+                    "type": "light",
+                    "label": "Dimmer / Switch",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "device_id",
+                            "label": "Device ID",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "cover",
+                    "label": "Shade",
+                    "config_schema": [
+                        {
+                            "field": "room",
+                            "label": "Room",
+                            "required": true
+                        },
+                        {
+                            "field": "device_id",
+                            "label": "Device ID",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "driver_id": "denon-avr-v1",
+            "name": "Denon AV Receiver",
+            "manufacturer": "Denon",
+            "type": "direct",
+            "description": "Controls Denon AV receivers over IP using the Denon HTTP control protocol",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "port",
+                    "label": "Port",
+                    "required": false,
+                    "default": 80
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "driver_id": "sonos-v1",
+            "name": "Sonos Speaker",
+            "manufacturer": "Sonos",
+            "type": "direct",
+            "description": "Controls Sonos speakers and soundbars over IP using the Sonos local API",
+            "config_schema": [
+                {
+                    "field": "ip_address",
+                    "label": "IP Address",
+                    "required": true
+                },
+                {
+                    "field": "room",
+                    "label": "Room",
+                    "required": true
+                }
+            ]
         }
     ]
 }
