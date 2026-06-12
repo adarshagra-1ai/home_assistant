@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 from dotenv import load_dotenv
 
@@ -84,21 +85,19 @@ def _call_llm(messages: list):
         tool_choice="auto",
         temperature=0,
         stream=True,
+        stream_options={"include_usage": True},
     )
     chunks        = []
-    reply_started = False
+    reply_parts   = []
     for chunk in response:
         chunks.append(chunk)
         delta = chunk.choices[0].delta
         if delta.content:
-            if not reply_started:
-                print("\n  Agent: ", end="", flush=True)
-                reply_started = True
-            print(delta.content, end="", flush=True)
-    if reply_started:
-        print("\n")
+            reply_parts.append(delta.content)
     full_response = litellm.stream_chunk_builder(chunks, messages=messages)
-    return full_response.choices[0].message
+    usage = full_response.usage
+    tokens = getattr(usage, "prompt_tokens", 0) + getattr(usage, "completion_tokens", 0)
+    return full_response.choices[0].message, tokens, "".join(reply_parts)
 
 
 _CREATE_TOOLS = {
@@ -133,9 +132,10 @@ def _tool_result(tool_call_id: str, result: dict) -> dict:
 
 # ── Core agent function ───────────────────────────────────────
 
-def run_agent(conversation_history: list, project_state: dict) -> list:
-    messages  = [None] + conversation_history  # slot 0 reserved for system message
-    sys_dirty = True
+def run_agent(conversation_history: list, project_state: dict) -> tuple:
+    messages     = [None] + conversation_history  # slot 0 reserved for system message
+    sys_dirty    = True
+    total_tokens = 0
 
     for _ in range(MAX_ROUNDS):
         if sys_dirty:
@@ -145,16 +145,19 @@ def run_agent(conversation_history: list, project_state: dict) -> list:
             }
             sys_dirty = False
 
-        choice = _call_llm(messages)
+        choice, tokens, streamed_text = _call_llm(messages)
+        total_tokens += tokens
 
         # ── Plain text reply ──────────────────────────────────
         if not choice.tool_calls:
-            reply = (choice.content or "").strip()
+            reply = (choice.content or streamed_text or "").strip()
             if not reply:
                 print("\n  [warn] Model returned empty response. Try rephrasing.\n")
-                return conversation_history
+                return conversation_history, total_tokens
+            print(f"Messages:\n{json.dumps(messages, indent=2, default=str)}\n")
+            print(f"\n  Agent: {reply}\n")
             conversation_history.append({"role": "assistant", "content": reply})
-            return conversation_history
+            return conversation_history, total_tokens
 
         messages.append(choice)
         any_write        = False
@@ -362,11 +365,12 @@ def run_agent(conversation_history: list, project_state: dict) -> list:
                 parts = [_WRITE_CONFIRMATIONS[n](p) for n, p in completed_writes if n in _WRITE_CONFIRMATIONS]
                 reply = " ".join(parts)
                 if reply:
+                    print(f"Messages:\n{json.dumps(messages, indent=2, default=str)}\n")
                     print(f"\n  Agent: {reply}\n")
                     conversation_history.append({"role": "assistant", "content": reply})
-                return conversation_history
+                return conversation_history, total_tokens
 
-    return conversation_history
+    return conversation_history, total_tokens
 
 
 # ── Main loop ─────────────────────────────────────────────────
@@ -379,17 +383,18 @@ if __name__ == "__main__":
 
     while True:
         try:
+            print("=" * 50)
             user_input = input("Engineer: ").strip()
+            print("=" * 50)
             if not user_input:
                 continue
 
             history.append({"role": "user", "content": user_input})
-            
 
-            if len(history) > HISTORY_LIMIT:
-                history = history[-HISTORY_LIMIT:]
-
-            history = run_agent(history, project_state)
+            start = time.time()
+            history, tokens = run_agent(history, project_state)
+            elapsed = time.time() - start
+            print(f"  Time: [{elapsed:.2f}s | Token: {tokens} tokens]\n")
 
         except KeyboardInterrupt:
             print("\n  Agent stopped.")
